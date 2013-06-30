@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset=UTF-8 />
+	<title>写真投稿</title>
+</head>
+
+<body>
+	<div id="wrap">
+		<div id="head">
+			<h1>写真投稿画面</h1>
+		</div>
+		<div id="content">
+			<form action="postImage.php" method="post" enctype="multipart/form-data">
+				<dl>
+					<dt>写真をどうぞ</dt>
+					<dd>
+						<input type="file" size="50" name="image">
+					</dd>
+				</dl>
+				
+				<input type="submit" value="投稿する" />
+				
+			</form>
+		</div>
+		
+		<div id="foot">
+			<p>Copyright 2013 加藤 亮太. All Rights Reserved.</p>
+		</div>
+	</div>
+</body>
+
+</html>

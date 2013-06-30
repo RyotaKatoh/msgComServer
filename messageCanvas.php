@@ -25,18 +25,20 @@
     	
     </script>
     
-    <link type="text/css" href="common.css" />
+    <link type="text/css" rel="stylesheet" href="common.css" />
+    
+
   </head>
 <body><!-- onload="init();">-->
-	<div id="wrapper">	
+	<div id="wrapper">
+
     <canvas id="tutorial"></canvas>
     
     <div id="params">
     	<input type="hidden" id="numMessages" value="<?php  numMessages();?>">
     	
     </div>
-   </div>
-   
+	</div>
    
    <script type="text/javascript" src="canvas.js"></script>
    <script>
@@ -54,5 +56,8 @@
 	init();
    
    </script>
+ 
+
+   
 </body>
 </html>

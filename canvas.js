@@ -12,29 +12,39 @@ var b =  new Array(NUM);
 var ctx;
 
 var message = new Array(NUM);
+var messageR = new Array(NUM);
+var messageG = new Array(NUM);
+var messageB = new Array(NUM);
  
 function init(){
     var canvas = document.getElementById('tutorial');
         if (canvas.getContext){
             ctx = canvas.getContext('2d');
-        for(var i = 0; i < NUM; i++){
-        speedX[i] = Math.random() * 10.0 - 5.0;
-        speedY[i] = Math.random() * 10.0 - 5.0;
-        locX[i] = Math.floor(Math.random() * WIDTH);//WIDTH / 2;
-        locY[i] = Math.floor(Math.random() * HEIGHT);//HEIGHT / 2;
-        radius[i] = Math.random() * 34.0 + 30.0;
-        r[i] = Math.floor(Math.random() * 255);
-        g[i] = Math.floor(Math.random() * 255);
-        b[i] = Math.floor(Math.random() * 255);
-        message[i] = "Hello";
-        }
+        	for(var i = 0; i < NUM; i++){
         
+        		speedX[i] = Math.random() * 10.0 - 5.0;
+        		speedY[i] = Math.random() * 10.0 - 5.0;
+        		radius[i] = Math.random() * 34.0 + 30.0;
+        		do{
+        			locX[i] = Math.floor(Math.random() * WIDTH);//WIDTH / 2;
+        		}while(locX[i]-radius[i] < 0 || locX[i] + radius[i] > WIDTH);
+        		do{
+        			locY[i] = Math.floor(Math.random() * HEIGHT);//HEIGHT / 2;
+        		}while(locY[i] - radius[i] < 0 || locY[i] + radius[i] > HEIGHT);
+        		r[i] = Math.floor(Math.random() * 255);
+        		g[i] = Math.floor(Math.random() * 255);
+        		b[i] = Math.floor(Math.random() * 255);
+        		//message[i] = "Hello";
+        		messageR[i] = 255 - r[i];
+        		messageG[i] = 255 - g[i];
+        		messageB[i] = 255 - b[i];
+       		}
         
         setInterval(draw, 33);
-    }
-    }
+    	}
+}
  
-    function draw(){
+function draw(){
     ctx.globalCompositeOperation = "source-over";
    
     ctx.fillStyle = "rgba(0,0,0,1.0)";
@@ -46,11 +56,11 @@ function init(){
         locX[i] += speedX[i];
         locY[i] += speedY[i];
          
-        if(locX[i] < 0 || locX[i] > WIDTH){
+        if((locX[i] - radius[i]) < 0 || (locX[i] + radius[i]) > WIDTH){
         speedX[i] *= -1.0;
         }
  
-        if(locY[i] < 0 || locY[i] > HEIGHT){
+        if((locY[i] - radius[i]) < 0 || (locY[i]+ radius[i]) > HEIGHT){
         speedY[i] *= -1.0;
         }
          
@@ -59,9 +69,9 @@ function init(){
         ctx.fillStyle = 'rgb(' + r[i] + ',' + g[i] + ',' + b[i] + ')';
         ctx.arc(locX[i], locY[i], radius[i], 0, Math.PI*2.0, true);
         ctx.fill();
-        ctx.fillStyle = 'rgb(255,255,255)';
+        ctx.fillStyle = 'rgb('+ messageR[i] +','+ messageG[i] + ','+ messageB[i] +')';
         ctx.textAlign   = "center";
-        ctx.font         = 'Italic 30px Sans-Serif';
+        ctx.font         = 'Italic 20px Sans-Serif';
         ctx.fillText(message[i],locX[i],locY[i]);    
     }
 }
