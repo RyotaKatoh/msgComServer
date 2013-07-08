@@ -36,7 +36,7 @@
     
     <div id="params">
     	<input type="hidden" id="numMessages" value="<?php  numMessages();?>">
-    	
+    	<input type="hidden" id="numImages"   value="<?php numImages();?>" >
     </div>
 	</div>
    

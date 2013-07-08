@@ -6,32 +6,44 @@ mb_internal_encoding("utf-8"); //内部文字コードを変更
 mb_http_input("auto");
 mb_http_output("utf-8");
 
-$sql = sprintf('SELECT * FROM message');
+$sqlForMessage = sprintf('SELECT * FROM message');
 
-$posts = mysql_query($sql) or die(mysql_error());
+$postsOfMessage = mysql_query($sqlForMessage) or die(mysql_error());
 
-mysql_close();
+$resultOfMessage = array();
 
-$result = array();
-
-while($row = mysql_fetch_assoc($posts)):
-	$result[] =  $row['message'];
+while($row = mysql_fetch_assoc($postsOfMessage)):
+	$resultOfMessage[] =  $row['message'];
 endwhile;
 
+$sqlForImage = sprintf('SELECT * FROM image');
+$postsOfImage = mysql_query($sqlForImage) or die(mysql_error());
+
+
+mysql_close();
 //DB内のメッセージをJSONの形式で返す
 function createMessagesByJson(){
-	global $result;
+	global $resultOfMessage;
 
 	header('Content-type:application/json; charset=utf8');
-	echo json_encode($result);
+	echo json_encode($resultOfMessage);
 }
 
 //DB内のメッセージ数を返す
 function numMessages(){
-	global $posts;
+	global $postsOfMessage;
 	
-	echo mysql_num_rows($posts);
+	echo mysql_num_rows($postsOfMessage);
 	
 }
+
+//DB内の画像数を返す
+function numImages(){
+	global $postsOfImage;
+	
+	echo mysql_num_rows($postsOfImage);
+	
+}
+
 
 ?>

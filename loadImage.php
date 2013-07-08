@@ -1,23 +1,5 @@
 <?php
-/*
-ini_set( 'display_errors', 1 );
 
-require 'join/dbconnection.php';
-
-$id = intval($_GET['id']);
-
-$sql = "select * from image where id=$id";
-
-if($images = mysql_query($sql))
-{
-	$image = mysql_fetch_assoc($images);
-	header("Content-type: ".$image['mime']);
-	echo stripslashes($image['image']);
-}
- 
- * 
- */
-ini_set( 'display_errors', 1 );
 require 'join/dbconnection.php';
 
 // 表示するイメージのIDをパラメータから取得
@@ -34,12 +16,3 @@ header( 'Content-Type: '.$row['mime'] );
 print $row['image'];
 
 ?>
-<!--
-<!DOCTYPE html>
-<head>
-	<title>test</title>
-</head>
-
-<body>
-	<p><?php echo $image['id']; ?></p>
-</body>

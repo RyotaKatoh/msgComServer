@@ -1,4 +1,5 @@
 var NUM = document.getElementById("numMessages").value;
+var NUM_IMAGES = document.getElementById("numImages").value;
 const WIDTH = innerWidth;
 const HEIGHT = innerHeight; 
 var speedX = new Array(NUM);
@@ -15,6 +16,14 @@ var message = new Array(NUM);
 var messageR = new Array(NUM);
 var messageG = new Array(NUM);
 var messageB = new Array(NUM);
+
+var image = new Array(NUM_IMAGES);
+//var image = new Image();
+//var image2 = new Image();
+var imageLocX   = new Array(NUM_IMAGES);
+var imageLocY   = new Array(NUM_IMAGES);
+var imageSpeedX = new Array(NUM_IMAGES);
+var imageSpeedY = new Array(NUM_IMAGES); 
  
 function init(){
     var canvas = document.getElementById('tutorial');
@@ -22,8 +31,8 @@ function init(){
             ctx = canvas.getContext('2d');
         	for(var i = 0; i < NUM; i++){
         
-        		speedX[i] = Math.random() * 10.0 - 5.0;
-        		speedY[i] = Math.random() * 10.0 - 5.0;
+        		speedX[i] = Math.random() * 8.0 - 4.0;
+        		speedY[i] = Math.random() * 8.0 - 4.0;
         		radius[i] = Math.random() * 34.0 + 30.0;
         		do{
         			locX[i] = Math.floor(Math.random() * WIDTH);//WIDTH / 2;
@@ -39,19 +48,14 @@ function init(){
         		messageG[i] = 255 - g[i];
         		messageB[i] = 255 - b[i];
        		}
-        
-        setInterval(draw, 33);
+       		
+       		$.getJSON("getImageID.php",initImage);
+       		//initImage();
     	}
 }
- 
-function draw(){
-    ctx.globalCompositeOperation = "source-over";
-   
-    ctx.fillStyle = "rgba(0,0,0,1.0)";
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
- 
- 
-    for(var i = 0; i < NUM; i++){
+
+function drawMessages(){
+	for(var i = 0; i < NUM; i++){
         //位置を更新
         locX[i] += speedX[i];
         locY[i] += speedY[i];
@@ -72,7 +76,61 @@ function draw(){
         ctx.fillStyle = 'rgb('+ messageR[i] +','+ messageG[i] + ','+ messageB[i] +')';
         ctx.textAlign   = "center";
         ctx.font         = 'Italic 20px Sans-Serif';
-        ctx.fillText(message[i],locX[i],locY[i]);    
+        ctx.fillText(message[i],locX[i],locY[i]);   
     }
+}
+
+function drawImages(){
+    for(var i=0;i<NUM_IMAGES;i++){
+    	imageLocX[i] += imageSpeedX[i];
+    	imageLocY[i] += imageSpeedY[i];
+    	
+    	if((imageLocX[i] ) <0 || (imageLocX[i] + image[i].width)>WIDTH){
+    		imageSpeedX[i] *= -1.0;
+    	}
+    	
+    	if((imageLocY[i] )<0 || (imageLocY[i] + image[i].height) > HEIGHT){
+    		imageSpeedY[i] *= -1.0;
+    	}
+    	
+    	if(image[i].width > 0)
+	    	ctx.drawImage(image[i],imageLocX[i],imageLocY[i]);
+    	
+    }	
+}
+ 
+function draw(){
+    ctx.globalCompositeOperation = "source-over";
+   
+    ctx.fillStyle = "rgba(0,0,0,1.0)";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    
+    drawImages();
+    drawMessages();     
+   
+}
+
+function initImage(id){
+	for(var i=0;i<id.length;i++){
+		image[i] = new Image();
+       	image[i].src = "loadImage.php?id="+id[i];      			
+       
+  		imageSpeedX[i] = Math.random() * 8.0 - 4.0;
+     	imageSpeedY[i] = Math.random() * 8.0 - 4.0;
+
+		imageLocX[i] = Math.floor(Math.random() * (WIDTH - 240));
+		imageLocY[i] = Math.floor(Math.random() * 120);
+/*
+        do{
+        	imageLocX[i] = Math.floor(Math.random() * WIDTH);
+        }while(imageLocX[i] < 0 || (imageLocX[i]+image[i].width) > WIDTH);
+        do{
+        	imageLocY[i] = Math.floor(Math.random() * HEIGHT);
+        }while(imageLocY[i] < 0 || (imageLocY[i]+image[i].height) > HEIGHT);
+*/      
+
+	}
+	
+	setInterval(draw, 33);
 }
     
