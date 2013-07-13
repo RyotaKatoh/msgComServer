@@ -113,7 +113,7 @@ function draw(){
 function initImage(id){
 	for(var i=0;i<id.length;i++){
 		image[i] = new Image();
-       	image[i].src = "loadImage.php?id="+id[i];      			
+       	image[i].src = "http://ec2-54-248-86-228.ap-northeast-1.compute.amazonaws.com/msgCom/loadImage.php?id="+id[i];      			
        
   		imageSpeedX[i] = Math.random() * 8.0 - 4.0;
      	imageSpeedY[i] = Math.random() * 8.0 - 4.0;

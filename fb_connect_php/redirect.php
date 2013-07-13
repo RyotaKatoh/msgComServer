@@ -1,10 +1,25 @@
 <?php
 ini_set( 'display_errors', 1 );
-require_once('config.php');
+require_once('../config.php');
 
 session_start();
 
 if(empty($_GET['code'])){
+	// if use deny msgCom application
+	if(isset($_GET['error'])){
+		if($_GET['error'] == 'access_denied'){
+			echo "Please permit...";
+		
+			echo "</br>";
+			echo "<a href=\"login.php\">戻る</a>";
+			exit;
+		
+		}
+		exit;	
+		
+	}
+	
+	
 	// prepare authentification
 	
 	$_SESSION['state'] = sha1(uniqid(mt_rand(),TRUE));
@@ -45,9 +60,50 @@ else{
 	 
 	 $url = 'https://graph.facebook.com/me?access_token='.$access_token.'&fields=name,picture';
      $me = json_decode(file_get_contents($url));
-     var_dump($me);
-	 exit;
-	
+	 
+	 // DB processing
+	 try{
+	 		
+	 	$dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
+		
+	 }catch(PDOException $e){
+	 	echo $e->getMessage();
+		exit;
+	 }
+	 
+	 $stmt = $dbh->prepare("SELECT * FROM user WHERE facebook_user_id=:user_id");
+	 $stmt->execute(array(":user_id"=>$me->id));
+	 $user = $stmt->fetch();
+	 
+	 //insert DB user information
+	 if(empty($user)){
+	 	echo "this is something wrong!!!";
+		
+		$stmt = $dbh->prepare("INSERT INTO user(facebook_user_id, facebook_name, facebook_picture, facebook_access_token, created, modified) VALUES (:user_id, :name, :picture, :token, now(), now())");
+		
+		$params = array(
+			":user_id"=> $me->id,
+			":name"=> $me->name,
+			":picture"=> $me->picture->data->url,
+			":token"=> $access_token
+		);
+		
+		$stmt->execute($params);
+		
+		$stmt = $dbh->prepare("SELECT * from user WHERE id = :last_insert_id limit 1");
+		$stmt->execute(array(":last_insert_id"=>$dbh->lastInsertId()));
+		$user = $stmt->fetch();
+		 
+	 }
+	 
+	 if(!empty($user)){
+	 	session_regenerate_id(true);
+		$_SESSION['user'] = $user;
+	 }	 
+	 
+	 //move to index.php
+	 header('Location:http://ec2-54-248-86-228.ap-northeast-1.compute.amazonaws.com'."$_SESSION[page]");
+	 
 }
 
 ?>
