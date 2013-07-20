@@ -1,9 +1,39 @@
 <?php
-	require_once 'utility.php';
-	session_start();
+require_once '../utility.php';
+require_once '../config.php';
 	
-	$_SESSION['page_name'] = basename($_SERVER['SCRIPT_NAME']);
+session_start();
+
+$_SESSION['page'] = $_SERVER["SCRIPT_NAME"];
+
+//check login
+if(empty($_SESSION['user'])){
+
+	header('Location:'.SITE_URL.'login.php');	
 	
+	exit;
+}
+
+
+//	 
+try{
+	$dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
+		
+}catch(PDOException $e){
+	 echo $e->getMessage();
+	exit;
+}
+	 
+$stmt = $dbh->prepare("SELECT * FROM user_permission_to_messagepage WHERE facebook_user_id=:user_id AND page_name=:pagename");
+$stmt->execute(array(":user_id"=>$_SESSION['user']['facebook_user_id'],
+					  ":pagename"=>basename($_SERVER['SCRIPT_NAME'])));
+$permission = $stmt->fetch();
+if(empty($permission)){
+	
+	echo "You don not have permission this page";
+	exit;
+	
+}  
 ?>
 
 <!DOCTYPE html>
@@ -12,9 +42,9 @@
     <meta charset="utf-8" />
     <title>Canvas tutorial template</title>
     
-    <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery.min.js"></script>
     
-    <link type="text/css" rel="stylesheet" href="common.css" />
+    <link type="text/css" rel="stylesheet" href="../common.css" />
     
 
   </head>
@@ -29,7 +59,7 @@
     </div>
 	</div>
    
-   <script type="text/javascript" src="canvas.js"></script>
+   <script type="text/javascript" src="./canvas.js"></script>
    <script>
 	var canvas = document.getElementById('tutorial');
 

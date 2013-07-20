@@ -1,6 +1,7 @@
 <?php
 
-require 'join/dbconnection.php';
+require_once 'connectDB.php';
+session_start();
 
 // type: message or image
 if(!isset($_GET['type'])){
@@ -8,16 +9,17 @@ if(!isset($_GET['type'])){
 }
 
 if($_GET['type'] == 'message'){
-	$sql = sprintf('SELECT id FROM message');
+	$sql = $dbh->prepare("SELECT COUNT(id) FROM message WHERE page_name=:page_name");
 }
 else if($_GET['type'] == 'image'){
-	$sql = sprintf( 'SELECT id from image');
+	$sql = $dbh->prepare("SELECT COUNT(id) FROM image WHERE page_name=:page_name");
 }
 
 // データの取得
-$result = mysql_query( $sql );
+$sql->execute(array(":page_name"=>$_SESSION['page_name']));
  
 // データを出力
-print mysql_num_rows($result);
+print $sql->fetchColumn();
+
 
 ?>

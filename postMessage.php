@@ -1,20 +1,21 @@
 <?php
 
-require 'join/dbconnection.php';
+require_once 'connectDB.php';
 
 //投稿処理
 if(!empty($_POST)){
 	if($_POST['message'] != ''){
-		$sql = sprintf('INSERT INTO message SET message="%s"', 
-						mysql_real_escape_string($_POST['message']));
-		mysql_query($sql) or die(mysql_error());
+		$sql = $dbh->prepare("INSERT INTO message (message, page_name) VALUES (:message,:page_name)");
+		
+		try{
+			$sql->execute(array(":message"=>$_POST['message'],
+								":page_name"=>$_POST['page_name']));
+			
+		}catch(PDOException $e){
+			$this->$dbh->rollback();
+		}
 		
 	}	
-}
-
-//htmlspecialcharsのショートカット
-function h($value){
-	return htmlspecialchars($value,ENT_QUOTES,'utf-8');
 }
 
 ?>

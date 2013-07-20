@@ -1,25 +1,30 @@
 <?php
-require_once 'join/dbconnection.php';
+require_once 'connectDB.php';
+session_start();
+
 
 mb_language("uni");
 mb_internal_encoding("utf-8"); //内部文字コードを変更
 mb_http_input("auto");
 mb_http_output("utf-8");
 
-$sql = sprintf('SELECT * FROM message');// WHERE id=%d',
-			//mysql_real_escape_string($_GET['id']));
+$sql = $dbh->prepare("SELECT * FROM message WHERE page_name=:page_name");
 
-$posts = mysql_query($sql) or die(mysql_error());
+try{
+	
+	$sql->execute(array(":page_name"=>$_SESSION['page_name']));
 
-mysql_close();
-
+}catch(PDOException $e) { 
+	$this->$dbh->rollBack();
+}
 
 $result = array();
-while($row = mysql_fetch_assoc($posts)):
+while($row = $sql->fetch(PDO::FETCH_ASSOC)):
 	$result[] =  $row['message'];
-	//echo $row['message'];
 endwhile;
 
 
 header('Content-type:application/json; charset=utf8');
 echo json_encode($result);
+
+?>

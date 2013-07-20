@@ -2,8 +2,8 @@
 
 //should change settings on production environment
 define('DB_HOST', 'localhost');
-define('DB_USER', 'MessageDBUser');
-define('DB_PASSWORD', 'Greo98Mnfg23ge!');
+define('DB_USER', 'root');
+define('DB_PASSWORD', 'root');
 define('DB_NAME', 'messageDB');
 
 define('APP_ID','506894829377608');
