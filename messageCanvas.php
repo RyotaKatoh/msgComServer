@@ -9,7 +9,8 @@
     <title>Canvas tutorial template</title>
     
     <script type="text/javascript" src="./jquery.min.js"></script>
-    <script>
+    
+    <!--<script>
     	function doAction(){
             $.getJSON('getJson.php',callback);
         }
@@ -24,7 +25,7 @@
         }
     	
     </script>
-    
+   -->
     <link type="text/css" rel="stylesheet" href="common.css" />
     
 
@@ -52,8 +53,12 @@
 	}
 
 	expandCanvas();
-	doAction();
 	init();
+	checkUpdate('image');
+	//checkUpdate('message');
+	setInterval(draw, 33);
+	setInterval(function(){checkUpdate('message');},10000);
+	setInterval(function(){checkUpdate('image');},10000)
    
    </script>
  
