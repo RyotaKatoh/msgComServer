@@ -1,12 +1,14 @@
 <?php
 require_once 'connectDB.php';
-require_once 'join/dbconnection.php';
 
 ini_set('default_charset', 'UTF-8');
 
+/*
 if(!isset($_POST['page_name'])){	
 	exit;
 }
+ * 
+ */
 
 if($_FILES['image']['error']){
 
@@ -49,14 +51,26 @@ if(is_uploaded_file($path)){
 
 	$image = file_get_contents($path);
 	
-	$sql = $dbh->prepare("INSERT INTO image (mime, image, page_name) values (:mime, :image, :page_name)");
+	if(empty($_POST['page_name'])){
+		$sql = $dbh->prepare("INSERT INTO image (mime, image) values (:mime, :image)");
 	
-	try{
-		$sql->execute(array(":mime"=>$mime,
-							":image"=>$image,
-							":page_name"=>$_POST['page_name']));
-	}catch(PDOException $e){
-		$this->$dbh->rollBack();
+		try{
+			$sql->execute(array(":mime"=>$mime,
+								":image"=>$image));
+		}catch(PDOException $e){
+			$this->$dbh->rollBack();
+		}
+	}
+	else{
+		$sql = $dbh->prepare("INSERT INTO image (mime, image, page_name) values (:mime, :image, :page_name)");
+	
+		try{
+			$sql->execute(array(":mime"=>$mime,
+								":image"=>$image,
+								":page_name"=>$_POST['page_name']));
+		}catch(PDOException $e){
+			$this->$dbh->rollBack();
+		}
 	}
 
 	//$sql = "insert into image (mime, image, page_name) values ('$mime', '$data', 'messageCanvas.php')";

@@ -5,22 +5,13 @@ require_once '../config.php';
 session_start();
 
 $_SESSION['page'] = $_SERVER["SCRIPT_NAME"];
+$_SESSION['page_name'] = basename($_SERVER['SCRIPT_NAME']);
 
 //check login
 if(empty($_SESSION['user'])){
 
 	header('Location:'.SITE_URL.'login.php');	
 	
-	exit;
-}
-
-
-//	 
-try{
-	$dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
-		
-}catch(PDOException $e){
-	 echo $e->getMessage();
 	exit;
 }
 	 

@@ -5,22 +5,13 @@ require_once '../config.php';
 session_start();
 
 $_SESSION['page'] = $_SERVER["SCRIPT_NAME"];
+$_SESSION['page_name'] = basename($_SERVER['SCRIPT_NAME']);
 
 //check login
 if(empty($_SESSION['user'])){
 
 	header('Location:'.SITE_URL.'login.php');	
 	
-	exit;
-}
-
-
-//	 
-try{
-	$dbh = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
-		
-}catch(PDOException $e){
-	 echo $e->getMessage();
 	exit;
 }
 	 
@@ -36,7 +27,6 @@ if(empty($permission)){
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -44,21 +34,6 @@ if(empty($permission)){
     <title>Canvas tutorial template</title>
     
     <script type="text/javascript" src="../jquery.min.js"></script>
-    <script>
-    	function doAction(){
-            $.getJSON('../getJson.php',callback);
-        }
-         
-        function callback(result){
-        	for(var i=0;i<result.length;i++){
-        		
-        		message[i] = result[i];
-        		
-        	}
-            //$('#message').text('受信データ：' + result[id]);
-        }
-    	
-    </script>
     
     <link type="text/css" rel="stylesheet" href="../common.css" />
     
@@ -75,7 +50,7 @@ if(empty($permission)){
     </div>
 	</div>
    
-   <script type="text/javascript" src="canvas.js"></script>
+   <script type="text/javascript" src="./canvas.js"></script>
    <script>
 	var canvas = document.getElementById('tutorial');
 
@@ -87,8 +62,10 @@ if(empty($permission)){
 	}
 
 	expandCanvas();
-	doAction();
 	init();
+	setInterval(draw, 33);
+	setInterval(function(){checkUpdate('message');},30000);
+	setInterval(function(){checkUpdate('image');},30000)
    
    </script>
  
